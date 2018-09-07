@@ -533,6 +533,23 @@ export default class Presentation extends React.Component {
           <p>
             3 oracles is not a lot! If 2 oracles collude, you're gonna have a <b>bad time!</b>
           </p>
+          <p>
+            You need a way to transport these signed messages (we use and love <b>Scuttlebot</b>)
+          </p>
+        </Slide>
+        <Slide>
+          <Heading size={3} textColor="tertiary">
+            Other uses of signed messages
+          </Heading>
+          <p>
+            <b>Multisig wallet!</b> Why have each signer send a tx?
+          </p>
+          <p>
+            <b>Relayers!</b> Pay for gas with tokens!
+          </p>
+          <p>
+            What idea will you come up with?
+          </p>
         </Slide>
         <Slide>
           <Heading size={1} lineHeight={1.5} textColor="tertiary">
