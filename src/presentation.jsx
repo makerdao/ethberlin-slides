@@ -7,6 +7,7 @@ import web3infura from './web3infura'
 import {
   BlockQuote,
   Cite,
+  Code,
   Deck,
   Heading,
   ListItem,
@@ -22,14 +23,11 @@ import {
   Image,
 } from 'spectacle'
 
-import Slide1 from './slide1'
-import PriceComparison from './pricecomparison'
-
 import daiLogo from './images/dai logo.png'
 import makerLogo from './images/maker logo.png'
-import maker from './images/maker logo with text.png'
-import cdp1 from './images/cdp1.png'
-import stableFund from './images/maker and stable fund.png'
+import med1 from './images/med1.png'
+import med2 from './images/med2.png'
+import med3 from './images/med3.png'
 
 // Import theme
 import createTheme from 'spectacle/lib/themes/default'
@@ -67,16 +65,18 @@ export default class Presentation extends React.Component {
   }
 
   componentDidMount() {
-    web3.eth.getAccounts().then(accounts => {
-      this.setState({accounts})
-    })
-    web3infura.eth.call({
+    this.init()
+  }
+
+  init = async () => {
+    const accounts = await web3.eth.getAccounts()
+    const x = await web3infura.eth.call({
       to: '0x729D19f657BD0614b4985Cf1D82531c67569197B',
       data: '0x57de26a4'
-    }).then(x => {
-      var ethMedianizer = web3.utils.fromWei(x)
-      this.setState({ethMedianizer})
     })
+    var ethMedianizer = web3.utils.fromWei(x)
+    this.setState({accounts, ethMedianizer})
+    this.sign()
   }
 
   grabOraclePrices = (e) => {
@@ -93,8 +93,12 @@ export default class Presentation extends React.Component {
     })
   }
 
-  sign = async (e) => {
+  doSign = (e) => {
     e.preventDefault()
+    this.sign()
+  }
+
+  sign = async () => {
     const o1 = web3.eth.abi.encodeParameter('uint256', web3.utils.toWei(this.state.o1))
     console.log(o1)
     const o2 = web3.eth.abi.encodeParameter('uint256', web3.utils.toWei(this.state.o2))
@@ -191,6 +195,79 @@ export default class Presentation extends React.Component {
           <p>
             {this.state.med} ETH/USD
           </p>
+          <p>
+            (Medianized)
+          </p>
+        </Slide>
+        <Slide>
+          <Heading textColor="tertiary" size={4} bold>
+            A first naive implementation
+          </Heading>
+          <p>{this.state.accounts[0]}</p>
+          <p>{this.state.o1}</p>
+          <p>{this.state.accounts[1]}</p>
+          <p>{this.state.o2}</p>
+          <p>{this.state.accounts[2]}</p>
+          <p>{this.state.o3}</p>
+        </Slide>
+        <Slide>
+          <Heading textColor="tertiary" size={4} bold>
+            Medianizer contract
+          </Heading>
+          <Heading textColor="secondary" size={4} bold>
+            {this.state.med} ETH/USD
+          </Heading>
+          <List>
+            <ListItem>{this.state.o1}</ListItem>
+            <ListItem>{this.state.o2}</ListItem>
+            <ListItem>{this.state.o3}</ListItem>
+          </List>
+        </Slide>
+        <Slide>
+        <Heading textColor="tertiary" size={4} bold>
+            Drawbacks
+          </Heading>
+          <List>
+            <ListItem>High gas costs</ListItem>
+            <ListItem>Network latency dependent</ListItem>
+            <ListItem>Oracles need ETH balance</ListItem>
+            <ListItem>Synced Parity/Geth node</ListItem>
+          </List>
+        </Slide>
+        <Slide>
+          <Heading textColor="tertiary" size={4} bold>
+            A better way
+          </Heading>
+          <Heading textColor="secondary" size={4} bold>
+            Signed messages!
+          </Heading>
+          <List>
+            <ListItem>Signing messages is free</ListItem>
+            <ListItem>Oracles need no ETH balance</ListItem>
+            <ListItem>No need to run a node</ListItem>
+            <ListItem>5 USD a month VPS is enough</ListItem>
+          </List>
+        </Slide>
+        <Slide>
+          <Heading textColor="tertiary" size={4} bold>
+            Back to the original prices
+          </Heading>
+          <br />
+          <div>
+            <p>
+            {this.state.o1}
+            </p>
+          </div>
+          <div>
+            <p>
+            {this.state.o2}
+            </p>
+          </div>
+          <div>
+            <p>
+            {this.state.o3}
+            </p>
+          </div>
         </Slide>
         <Slide>
           <Heading textColor="tertiary" size={4} bold>
@@ -236,7 +313,7 @@ export default class Presentation extends React.Component {
         </Slide>
         <Slide>
           <Heading textColor="tertiary" size={4} bold>
-            Say we have these 3 Ethereum accounts
+            Same 3 Ethereum accounts (no balance)
           </Heading>
           <div>
             <p>
@@ -258,7 +335,7 @@ export default class Presentation extends React.Component {
           </Heading>
         </Slide>
         <Slide>
-          <form onSubmit={this.sign}>
+          <form onSubmit={this.doSign}>
             <input type='submit' value="Sign!" />
           </form>
           <div>
@@ -284,7 +361,9 @@ export default class Presentation extends React.Component {
           <p>
             Price: {this.state.o1}
           </p>
-
+          <p style={{wordWrap: 'break-word'}}>
+            {this.state.sign1}
+          </p>
           <p>
             Original: {this.state.accounts[0]}
           </p>
@@ -309,7 +388,9 @@ export default class Presentation extends React.Component {
           <p>
             Price: {this.state.o2}
           </p>
-
+          <p style={{wordWrap: 'break-word'}}>
+            {this.state.sign2}
+          </p>
           <p>
             Original: {this.state.accounts[1]}
           </p>
@@ -334,7 +415,9 @@ export default class Presentation extends React.Component {
           <p>
             Price: {this.state.o3}
           </p>
-
+          <p style={{wordWrap: 'break-word'}}>
+            {this.state.sign3}
+          </p>
           <p>
             Original: {this.state.accounts[2]}
           </p>
@@ -357,84 +440,78 @@ export default class Presentation extends React.Component {
             How did that work?
           </Heading>
         </Slide>
-
-
-
         <Slide>
+          <p>web3.eth.personal.sign</p>
+          <p></p>
+          <p>web3.eth.personal.ecrecover</p>
+        </Slide>
+        <Slide>
+          <Code textColor="secondary">
+          const message = await web3.eth.personal.sign(price, account, '')
+          </Code>
+          <p style={{wordWrap: 'break-word'}}>
+            Price: {web3.eth.abi.encodeParameter('uint256', web3.utils.toWei(this.state.o1))}
+          </p>
+          <p>
+            Account: {this.state.accounts[0]}
+          </p>
+          <p style={{wordWrap: 'break-word'}}>
+            Message: {this.state.sign1}
+          </p>
+        </Slide>
+        <Slide>
+          <Code textColor="secondary">
+            const address = await web3.eth.personal.ecrecover(price, message, '')
+          </Code>
+          <p style={{wordWrap: 'break-word'}}>
+            Price: {web3.eth.abi.encodeParameter('uint256', web3.utils.toWei(this.state.o1))}
+          </p>
+          <p style={{wordWrap: 'break-word'}}>
+            Message: {this.state.sign1}
+          </p>
+          <p>
+            Recovered: {this.state.recover1}
+          </p>
+          <p>
+            Original: {this.state.accounts[0]}
+          </p>
+        </Slide>
+        <Slide>
+          <p style={{wordWrap: 'break-word'}}>
+            Message: {this.state.sign1}
+          </p>
+          <p style={{wordWrap: 'break-word'}}>
+            v: {this.state.sign1.substr(130,2)}
+          </p>
+          <p style={{wordWrap: 'break-word'}}>
+            r: {this.state.sign1.substr(2,64)}
+          </p>
+          <p style={{wordWrap: 'break-word'}}>
+            s: {this.state.sign1.substr(66,64)}
+          </p>
+        </Slide>
+        <Slide>
+        <Image src={med1} />
+        </Slide>
+        <Slide>
+        <Image src={med2} />
+        </Slide>
+        <Slide>
+        <Image src={med3} />
+        </Slide>
+        <Slide>
+          <Heading size={4} lineHeight={1.3} textColor="secondary">
+            This and more with...
+          </Heading>
           <Image src={daiLogo} height="350px" />
           <Heading size={4} lineHeight={1.3} textColor="secondary">
-            Imagine the gold standard but with any asset
+            Multicollateral Dai
+          </Heading>
+          <Heading size={4} lineHeight={1} textColor="tertiary">
+            (coming this year)
           </Heading>
         </Slide>
-        <Slide>
-          <Heading size={2} lineHeight={1.3} textColor="secondary">
-            Two types of users
-          </Heading>
-          <Heading size={3} lineHeight={1.8} textColor="tertiary">
-            Stability Seekers
-          </Heading>
-          <Heading size={3} lineHeight={1.8} textColor="secondary">
-            vs
-          </Heading>
-          <Heading size={3} lineHeight={1.8} textColor="tertiary">
-            Risk Seekers
-          </Heading>
-        </Slide>
-        <Slide>
-          <Heading size={3} lineHeight={1} textColor="secondary" fit>
-            Collateralized Debt Position
-          </Heading>
-          <Heading size={3} lineHeight={1} textColor="tertiary">
-            (CDP)
-          </Heading>
-          <List>
-            <ListItem>Borrow Dai by locking up collateral</ListItem>
-            <ListItem>Repay Dai + fee to retrieve collateral</ListItem>
-          </List>
-          <Image src={cdp1} height="420px" />
-        </Slide>
-        <Slide>
-          <Heading size={3} lineHeight={1.3} textColor="secondary">
-            Global Decentralized Credit System
-          </Heading>
-          <Image src={makerLogo} height="500px" />
-        </Slide>
-        <Slide>
-          <Image src={daiLogo} height="250px" />
-          <Heading size={2} lineHeight={1.3} textColor="secondary">
-            Dai time Story #1
-          </Heading>
-          <Heading size={3} lineHeight={1.8} textColor="tertiary">
-            Getting paid in Dai
-          </Heading>
-        </Slide>
-        <Slide>
-          <Image src={daiLogo} height="250px" />
-          <Heading size={2} lineHeight={1.3} textColor="secondary">
-            Dai time Story #2
-          </Heading>
-          <Heading size={3} lineHeight={1.8} textColor="tertiary">
-            Buying a car
-          </Heading>
-        </Slide>
-        <Slide>
-          <Image src={daiLogo} height="250px" />
-          <Heading size={2} lineHeight={1.3} textColor="secondary">
-            Dai time Story #3
-          </Heading>
-          <Heading size={3} lineHeight={1.8} textColor="tertiary">
-            Going full in on ETH
-          </Heading>
-        </Slide>
-        <Slide>
-          <Image src={daiLogo} height="250px" />
-          <Heading size={2} lineHeight={1.3} textColor="secondary">
-            Multi-collateral Dai
-          </Heading>
-          <Heading size={3} lineHeight={1.8} textColor="tertiary">
-            Coming soon!
-          </Heading>
-        </Slide>
+
         <Slide>
           <Heading textColor="secondary">
             Join our community
@@ -476,9 +553,7 @@ export default class Presentation extends React.Component {
           <Heading size={1} lineHeight={1.5} textColor="secondary">
             Thank you :)
           </Heading>
-          <Heading size={1} lineHeight={1.5} textColor="tertiary">
-            Questions?
-          </Heading>
+
           <Text textColor="secondary" bold>
             mariano@makerdao.com
           </Text>
