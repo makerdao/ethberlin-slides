@@ -50,9 +50,9 @@ const theme = createTheme(
 
 export default class Presentation extends React.Component {
   state = {
-    o1: "220.59",
-    o2: "220.8",
-    o3: "221.1",
+    o1: "0",
+    o2: "0",
+    o3: "0",
     med: 0,
     sign1: "",
     sign2: "",
@@ -70,13 +70,19 @@ export default class Presentation extends React.Component {
 
   init = async () => {
     const accounts = await web3.eth.getAccounts()
+    this.setState({accounts})
+    this.getMedianizerPrice()
+    setInterval(this.getMedianizerPrice, 10000)
+    // this.sign()
+  }
+
+  getMedianizerPrice = async () => {
     const x = await web3infura.eth.call({
       to: '0x729D19f657BD0614b4985Cf1D82531c67569197B',
       data: '0x57de26a4'
     })
     var ethMedianizer = web3.utils.fromWei(x)
-    this.setState({accounts, ethMedianizer})
-    this.sign()
+    this.setState({ethMedianizer})
   }
 
   grabOraclePrices = (e) => {
@@ -148,6 +154,7 @@ export default class Presentation extends React.Component {
           <Heading margin="100px 0 0" textColor="secondary" size={4} bold>
             MakerDAO
           </Heading>
+          <Image src={makerLogo} />
         </Slide>
         <Slide>
           <Heading>
@@ -178,7 +185,7 @@ export default class Presentation extends React.Component {
             Oracle 3: <input type='text' defaultValue={this.state.o3} ref={(input) => this.o3 = input} style={{textAlign: 'center'}} />
             </p>
           </div>
-          <input type="submit" style={{visible: 'false'}} />
+          <input type="submit" value="Let's do this!" />
           </form>
         </Slide>
         <Slide>
@@ -204,11 +211,11 @@ export default class Presentation extends React.Component {
             A first naive implementation
           </Heading>
           <p>{this.state.accounts[0]}</p>
-          <p>{this.state.o1}</p>
+          <p>{this.state.o1} ETH/USD</p>
           <p>{this.state.accounts[1]}</p>
-          <p>{this.state.o2}</p>
+          <p>{this.state.o2} ETH/USD</p>
           <p>{this.state.accounts[2]}</p>
-          <p>{this.state.o3}</p>
+          <p>{this.state.o3} ETH/USD</p>
         </Slide>
         <Slide>
           <Heading textColor="tertiary" size={4} bold>
@@ -218,10 +225,19 @@ export default class Presentation extends React.Component {
             {this.state.med} ETH/USD
           </Heading>
           <List>
-            <ListItem>{this.state.o1}</ListItem>
-            <ListItem>{this.state.o2}</ListItem>
-            <ListItem>{this.state.o3}</ListItem>
+            <ListItem>{this.state.o1} ETH/USD</ListItem>
+            <ListItem>{this.state.o2} ETH/USD</ListItem>
+            <ListItem>{this.state.o3} ETH/USD</ListItem>
           </List>
+          <p>
+            Every time an oracle updates, it triggers a Medianizer update.
+          </p>
+          <p>
+            Medianizer reads from all sources, computes the median on-chain, and saves the value.
+          </p>
+          <p>
+            This value is read by the Dai Credit System, and other parties interested.
+          </p>
         </Slide>
         <Slide>
         <Heading textColor="tertiary" size={4} bold>
@@ -232,6 +248,8 @@ export default class Presentation extends React.Component {
             <ListItem>Network latency dependent</ListItem>
             <ListItem>Oracles need ETH balance</ListItem>
             <ListItem>Synced Parity/Geth node</ListItem>
+            <ListItem>github.com/makerdao/price-feed</ListItem>
+            <ListItem>github.com/makerdao/medianizer</ListItem>
           </List>
         </Slide>
         <Slide>
@@ -246,6 +264,8 @@ export default class Presentation extends React.Component {
             <ListItem>Oracles need no ETH balance</ListItem>
             <ListItem>No need to run a node</ListItem>
             <ListItem>5 USD a month VPS is enough</ListItem>
+            <ListItem>github.com/makerdao/median</ListItem>
+            <ListItem>github.com/makerdao/terra</ListItem>
           </List>
         </Slide>
         <Slide>
@@ -255,23 +275,23 @@ export default class Presentation extends React.Component {
           <br />
           <div>
             <p>
-            {this.state.o1}
+            {this.state.o1} ETH/USD
             </p>
           </div>
           <div>
             <p>
-            {this.state.o2}
+            {this.state.o2} ETH/USD
             </p>
           </div>
           <div>
             <p>
-            {this.state.o3}
+            {this.state.o3} ETH/USD
             </p>
           </div>
         </Slide>
         <Slide>
           <Heading textColor="tertiary" size={4} bold>
-            Transforming to Wei...
+            Transforming to wei...
           </Heading>
           <br />
           <div>
@@ -336,7 +356,7 @@ export default class Presentation extends React.Component {
         </Slide>
         <Slide>
           <form onSubmit={this.doSign}>
-            <input type='submit' value="Sign!" />
+            <input type='submit' value="Sign! (fingers crossed plz)" />
           </form>
           <div>
             <p style={{wordWrap: 'break-word'}}>
@@ -500,6 +520,29 @@ export default class Presentation extends React.Component {
         <Image src={med3} />
         </Slide>
         <Slide>
+          <Heading size={3} textColor="tertiary">
+            Things to keep in mind
+          </Heading>
+          <p>
+            This is <b>not</b> production ready!
+          </p>
+          <p>
+            We use timestamps, nonces, and other <b>magical stuff</b>
+          </p>
+          <p>
+            3 oracles is not a lot! If 2 oracles collude, you're gonna have a <b>bad time!</b>
+          </p>
+        </Slide>
+        <Slide>
+          <Heading size={1} lineHeight={1.5} textColor="tertiary">
+            Detour!
+          </Heading>
+          <p>
+            How's ETH doing?
+          </p>
+          {this.state.ethMedianizer} ETH/USD
+        </Slide>
+        <Slide>
           <Heading size={4} lineHeight={1.3} textColor="secondary">
             This and more with...
           </Heading>
@@ -535,9 +578,10 @@ export default class Presentation extends React.Component {
             Bounties!
           </Heading>
           <Text textColor="tertiary" bold>
-            Up to 5 MKR will be awarded to projects using Dai and/or CDPs
+            Up to 4,500 Dai will be awarded to projects using Dai and/or CDPs
           </Text>
         </Slide>
+
         <Slide>
           <Heading size={2} lineHeight={1.3} textColor="secondary" fit>
             Hackathon Project Ideas
