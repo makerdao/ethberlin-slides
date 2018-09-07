@@ -1,0 +1,21 @@
+{
+  "name": "ethberlin",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://makerdao.com/ethberlin",
+  "dependencies": {
+    "gh-pages": "^1.1.0",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "spectacle-scripts": "2.0.0",
+    "web3": "^1.0.0-beta.36"
+  },
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
