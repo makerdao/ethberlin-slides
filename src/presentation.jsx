@@ -138,10 +138,10 @@ export default class Presentation extends React.Component {
       >
         <Slide>
           <Heading size={1} lineHeight={1} textColor="secondary">
-            Price oracles
+            Price Oracles
           </Heading>
           <Heading margin="100px 0 0" textColor="tertiary" size={4} bold>
-            + signed messages on & off-chain
+            Signed messages on & off-chain
           </Heading>
         </Slide>
         <Slide>
@@ -262,6 +262,7 @@ export default class Presentation extends React.Component {
           <List>
             <ListItem>Signing messages is free</ListItem>
             <ListItem>Oracles need no ETH balance</ListItem>
+            <ListItem>Can move some calculations off-chain</ListItem>
             <ListItem>No need to run a node</ListItem>
             <ListItem>5 USD a month VPS is enough</ListItem>
             <ListItem>github.com/makerdao/median</ListItem>
@@ -556,6 +557,15 @@ export default class Presentation extends React.Component {
         </Slide>
 
         <Slide>
+          <Heading size={1} lineHeight={1.5} textColor="secondary" fit>
+            Bounties!
+          </Heading>
+          <Text textColor="tertiary" bold>
+            Up to 4,500 Dai will be awarded to projects using Dai and/or CDPs
+          </Text>
+        </Slide>
+
+        <Slide>
           <Heading textColor="secondary">
             Join our community
           </Heading>
@@ -573,26 +583,8 @@ export default class Presentation extends React.Component {
             @MakerDAO
           </Text>
         </Slide>
-        <Slide>
-          <Heading size={1} lineHeight={1.5} textColor="secondary" fit>
-            Bounties!
-          </Heading>
-          <Text textColor="tertiary" bold>
-            Up to 4,500 Dai will be awarded to projects using Dai and/or CDPs
-          </Text>
-        </Slide>
 
-        <Slide>
-          <Heading size={2} lineHeight={1.3} textColor="secondary" fit>
-            Hackathon Project Ideas
-          </Heading>
-          <List>
-            <ListItem>Design an interface that distills out the complexity of the dai frontend to empower a specific use case of the platform.</ListItem>
-            <ListItem>Create a frontend for decentralized ETH exposure using CDP’s.</ListItem>
-            <ListItem>Build a slick wallet for sending and storing Dai.</ListItem>
-            <ListItem>Build a frontend for loan mechanics.</ListItem>
-          </List>
-        </Slide>
+
         <Slide>
           <Heading size={1} lineHeight={1.5} textColor="secondary">
             Thank you :)
